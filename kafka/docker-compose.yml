@@ -8,8 +8,11 @@ services:
   kafka1:
     image: wurstmeister/kafka
     container_name: bryro-kafka1
+    depends_on: 
+     - zookeeper
     ports:
      - "9094:9094"
+     - "19094:19094"
     expose:
      - "9092"
     environment:
@@ -17,11 +20,36 @@ services:
       HOSTNAME_COMMAND: "docker info | grep ^Name: | cut -d' ' -f 2"
       # within the image the broker can be addressed by kafka:9092. On the machine on which
       # the docker image runs, we can access it via <<HOSTNAME>>:9094
-      KAFKA_ADVERTISED_LISTENERS: DOCKER_INTERNAL://kafka1:9092,BROKER_HOST://_{HOSTNAME_COMMAND}:9094
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: DOCKER_INTERNAL:PLAINTEXT,BROKER_HOST:PLAINTEXT
-      KAFKA_LISTENERS: DOCKER_INTERNAL://0.0.0.0:9092,BROKER_HOST://0.0.0.0:9094
+      KAFKA_ADVERTISED_LISTENERS: DOCKER_INTERNAL://kafka1:9092,BROKER_HOST://_{HOSTNAME_COMMAND}:9094,NETWORK://${HOST_IP}:19094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: DOCKER_INTERNAL:PLAINTEXT,BROKER_HOST:PLAINTEXT,NETWORK:PLAINTEXT
+      KAFKA_LISTENERS: DOCKER_INTERNAL://0.0.0.0:9092,BROKER_HOST://0.0.0.0:9094,NETWORK://0.0.0.0:19094
       KAFKA_INTER_BROKER_LISTENER_NAME: DOCKER_INTERNAL
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "test:1:1"
+      KAFKA_CREATE_TOPICS: "test:2:1"
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
+  kafka2:
+    image: wurstmeister/kafka
+    container_name: bryro-kafka2
+    depends_on:
+     - zookeeper
+    ports: 
+     - "9095:9095"
+     - "19095:19095"
+    expose:
+     - "9092"
+    environment: 
+      HOSTNAME_COMMAND: "docker info | grep ^Name: | cut -d' ' -f 2"
+ #     HOSTIP_COMMAND: "hostname -I | cut -d ' ' -f 2"
+      # within the image the broker can be addressed by kafka:9092. On the machine on which
+      # the docker image runs, we can access it via <<HOSTNAME>>:9094
+      KAFKA_ADVERTISED_LISTENERS: DOCKER_INTERNAL://kafka2:9092,BROKER_HOST://_{HOSTNAME_COMMAND}:9095,NETWORK://${HOST_IP}:19095
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: DOCKER_INTERNAL:PLAINTEXT,BROKER_HOST:PLAINTEXT,NETWORK:PLAINTEXT
+      KAFKA_LISTENERS: DOCKER_INTERNAL://0.0.0.0:9092,BROKER_HOST://0.0.0.0:9095,NETWORK://0.0.0.0:19095
+      KAFKA_INTER_BROKER_LISTENER_NAME: DOCKER_INTERNAL
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+#      KAFKA_CREATE_TOPICS: "test:2:1"
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+
+     
