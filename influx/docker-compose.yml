@@ -1,0 +1,13 @@
+version: '2'
+services:
+  influxdb:
+    image: influxdb
+    container_name: bryro-influxdb
+    ports:
+     - "8086:8086"
+    environment:
+      INFLUXDB_DB: "bryro"
+      INFLUXDB_ADMIN_USER: "robin"
+      INFLUXDB_READ_USER: "bryro-read"
+      INFLUXDB_WRITE_USER: "bryro-write"
+      INFLUXDB_WRITE_USER_PASSWORD: "bryro-write"
