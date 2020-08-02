@@ -1,10 +1,12 @@
-version: '2'
+version: '3.5'
 services:
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: bryro-zookeeper
     ports:
      - "2181:2181"
+    networks:
+     - bryro-network
   kafka1:
     image: wurstmeister/kafka
     container_name: bryro-kafka1
@@ -15,6 +17,8 @@ services:
      - "19094:19094"
     expose:
      - "9092"
+    networks:
+     - bryro-network
     environment:
       # fetch the host name on which the broker runs
       HOSTNAME_COMMAND: "docker info | grep ^Name: | cut -d' ' -f 2"
@@ -38,6 +42,8 @@ services:
      - "19095:19095"
     expose:
      - "9092"
+    networks:
+     - bryro-network
     environment: 
       HOSTNAME_COMMAND: "docker info | grep ^Name: | cut -d' ' -f 2"
  #     HOSTIP_COMMAND: "hostname -I | cut -d ' ' -f 2"
@@ -51,5 +57,8 @@ services:
 #      KAFKA_CREATE_TOPICS: "test:2:1"
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
-
+networks:
+  bryro-network:
+    name: bryro-network
+    driver: bridge
      

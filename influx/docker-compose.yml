@@ -1,13 +1,20 @@
-version: '2'
+version: '3.5'
 services:
   influxdb:
     image: influxdb
     container_name: bryro-influxdb
     ports:
      - "8086:8086"
+    networks: 
+     - bryro-network
     environment:
       INFLUXDB_DB: "bryro"
       INFLUXDB_ADMIN_USER: "robin"
       INFLUXDB_READ_USER: "bryro-read"
       INFLUXDB_WRITE_USER: "bryro-write"
       INFLUXDB_WRITE_USER_PASSWORD: "bryro-write"
+networks:
+  bryro-network:
+    name: bryro-network
+    driver: bridge
+
