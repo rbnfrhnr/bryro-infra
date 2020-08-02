@@ -2,6 +2,7 @@ version: '3.5'
 services:
   grafana:
     image: grafana/grafana:latest
+    container_name: bryro-grafana
     ports:
       - '3000:3000'
     networks:
