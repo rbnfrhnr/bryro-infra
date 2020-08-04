@@ -13,6 +13,9 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD} 
+volumes:
+  grafana-storage:
+
 networks:
   bryro-network:
     name: bryro-network
